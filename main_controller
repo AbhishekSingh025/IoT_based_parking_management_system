@@ -1,0 +1,43 @@
+#include<ESP8266WiFi.h>
+#define IR D7
+const char * ssid="";
+const char * pass="";
+WiFiServer server(80);
+bool ir;
+void setup() {
+  Serial.begin(9600);
+  pinMode(IR, INPUT);
+  // put your setup code here, to run once:
+WiFi.begin(ssid,pass);
+Serial.begin(9600);
+while(WiFi.status()!=WL_CONNECTED)
+{
+  delay(50);
+  Serial.print(".");
+  }
+  server.begin();
+  Serial.println(WiFi.localIP());
+}
+int c=40;
+void loop() {
+  ir = digitalRead(IR);
+  if(c==0){
+   Serial.println("No More Parking Space Left");
+   client.println("No More Parking Space Left");
+   exit(0);
+  }
+  if(ir == 0)
+  {
+   Serial.println("Parking Space Count Decremented");
+   client.println("Parking Space Count Decremented");
+   c--;
+  }
+  else if (ir == 1)
+  {
+   Serial.println("Empty");
+   client.println("Empty");
+  }
+  delay(1000);
+  // put your main code here, to run repeatedly:
+WiFiClient client=server.available();
+}
